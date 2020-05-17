@@ -130,22 +130,38 @@ def run_ballistic_simulation( betas=[100,500,1000,5000],spacecraft=None,
             stagnation_enthalpy *= 0.00043
             dynamic_energy = Wsqm2Btusqft(dynamic_energy)
 
-        axes[0,0].plot(_altitudes, v_sol, label=f"$\\beta$={_beta}" )
-        axes[0,1].plot(_altitudes, deccel_sol, label=f"$\\beta$={_beta}" )
-        axes[0,2].plot(_altitudes, dynamic_press, label=f"$\\beta$={_beta}")
-    
-        axes[1,0].plot(_altitudes, mach_num, label=f"$\\beta$={_beta}")
-        axes[1,1].plot(_altitudes, reynolds_num, label=f"$\\beta$={_beta}")
-        axes[1,2].plot(_altitudes, stagnation_pressure, label=f"$\\beta$={_beta}") ####
+            axes[0,0].plot(_altitudes, v_sol, label=f"$\\beta$={_beta}" )
+            axes[0,1].plot(_altitudes, deccel_sol, label=f"$\\beta$={_beta}" )
+            axes[0,2].plot(_altitudes, dynamic_press, label=f"$\\beta$={_beta}")
         
-        axes[2,0].plot(_altitudes, stagnation_enthalpy, label=f"$\\beta$={_beta}")
-        axes[2,1].plot(_altitudes, stagnation_heat, label=f"$\\beta$={_beta}")
-        axes[2,2].plot(_altitudes, time_sol, label=f"$\\beta$={_beta}" )
+            axes[1,0].plot(_altitudes, mach_num, label=f"$\\beta$={_beta}")
+            axes[1,1].plot(_altitudes, reynolds_num, label=f"$\\beta$={_beta}")
+            axes[1,2].plot(_altitudes, stagnation_pressure, label=f"$\\beta$={_beta}") ####
+            
+            axes[2,0].plot(_altitudes, stagnation_enthalpy, label=f"$\\beta$={_beta}")
+            axes[2,1].plot(_altitudes, stagnation_heat, label=f"$\\beta$={_beta}")
+            axes[2,2].plot(_altitudes, time_sol, label=f"$\\beta$={_beta}" )
+            
+            axes[3,0].plot(_altitudes, range_sol, label=f"$\\beta$={_beta}")
+            axes[3,1].plot(_altitudes, dynamic_energy, label=f"$\\beta$={_beta}")
+            axes[3,2].plot(_altitudes, gamma_heat)
+        else:
+            axes[0,0].plot(v_sol,_altitudes, label=f"$\\beta$={_beta}" )
+            axes[0,1].plot(deccel_sol,_altitudes, label=f"$\\beta$={_beta}" )
+            axes[0,2].plot(dynamic_press,_altitudes, label=f"$\\beta$={_beta}")
         
-        axes[3,0].plot(_altitudes, range_sol, label=f"$\\beta$={_beta}")
-        axes[3,1].plot(_altitudes, dynamic_energy, label=f"$\\beta$={_beta}")
-        axes[3,2].plot(_altitudes, gamma_heat)
-    
+            axes[1,0].plot(mach_num,_altitudes, label=f"$\\beta$={_beta}")
+            axes[1,1].plot(reynolds_num,_altitudes, label=f"$\\beta$={_beta}")
+            axes[1,2].plot(stagnation_pressure,_altitudes, label=f"$\\beta$={_beta}") ####
+            
+            axes[2,0].plot(stagnation_enthalpy,_altitudes, label=f"$\\beta$={_beta}")
+            axes[2,1].plot(stagnation_heat,_altitudes, label=f"$\\beta$={_beta}")
+            axes[2,2].plot(time_sol,_altitudes, label=f"$\\beta$={_beta}" )
+            
+            axes[3,0].plot(range_sol,_altitudes, label=f"$\\beta$={_beta}")
+            axes[3,1].plot(dynamic_energy,_altitudes, label=f"$\\beta$={_beta}")
+            axes[3,2].plot(gamma_heat,_altitudes)    
+
     if plot_units == "imperial":
         axes[0,0].set_ylabel("Velocity \n$[ft/s]$")
         axes[0,2].set_ylabel("Dynamic Pressure \n$[lbf / ft^{2}]$")
@@ -159,17 +175,17 @@ def run_ballistic_simulation( betas=[100,500,1000,5000],spacecraft=None,
         axes[3,0].set_ylabel("Range $[mi]$")
         axes[3,1].set_ylabel("Dynamic Energy\n $[Btu/s-ft^{2}]$")
     else:
-        axes[0,0].set_ylabel("Velocity \n$[m/s]$")
-        axes[0,2].set_ylabel("Dynamic Pressure \n$[Pa]$")
-        axes[0,1].set_ylabel("Deceleration $[g]$")
-        axes[1,0].set_ylabel("Mach Number")
-        axes[1,1].set_ylabel("Reynolds Number")
-        axes[1,2].set_ylabel("Stagnation Point \nPressure \n$[Pa]$")
-        axes[2,0].set_ylabel("Stagnation Point \nEnthalpy \n$[J/kg]$")
-        axes[2,1].set_ylabel("Stagnation Point \nHeat Transfer \n$[W/m^{2}]$")
-        axes[2,2].set_ylabel("Entry Time $[s]$")
-        axes[3,0].set_ylabel("Range $[m]$")
-        axes[3,1].set_ylabel("Dynamic Energy\n $[W/m^{2}]$")
+        axes[0,0].set_xlabel("Velocity \n$[m/s]$")
+        axes[0,2].set_xlabel("Dynamic Pressure \n$[Pa]$")
+        axes[0,1].set_xlabel("Deceleration $[g]$")
+        axes[1,0].set_xlabel("Mach Number")
+        axes[1,1].set_xlabel("Reynolds Number")
+        axes[1,2].set_xlabel("Stagnation Point \nPressure \n$[Pa]$")
+        axes[2,0].set_xlabel("Stagnation Point \nEnthalpy \n$[J/kg]$")
+        axes[2,1].set_xlabel("Stagnation Point \nHeat Transfer \n$[W/m^{2}]$")
+        axes[2,2].set_xlabel("Entry Time $[s]$")
+        axes[3,0].set_xlabel("Range $[m]$")
+        axes[3,1].set_xlabel("Dynamic Energy\n $[W/m^{2}]$")
 
 
 
@@ -177,11 +193,16 @@ def run_ballistic_simulation( betas=[100,500,1000,5000],spacecraft=None,
     for idx,ax in enumerate(axes.reshape(-1)):
         if plot_units == "imperial":
             ax.set_xlabel("Altitude $[10^3 \;ft]$")
-        else:
-            ax.set_xlabel("Altitude $[km]$")
+            ax.set_xticks(np.arange(0, 300, step=50))
+            ax.yaxis.set_major_locator(plt.MaxNLocator(5))
 
-        # ax.set_xticks(np.arange(0, 300, step=50))
-        ax.yaxis.set_major_locator(plt.MaxNLocator(5))
+
+        
+        else:
+            ax.set_ylabel("Altitude $[km]$")
+            ax.xaxis.set_major_locator(plt.MaxNLocator(5))
+
+        
         ax.grid(which="both")
         ax.legend(bbox_to_anchor=(1.04,0.5), loc="center left", borderaxespad=0)
         # ax.legend()

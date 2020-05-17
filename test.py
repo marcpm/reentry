@@ -76,10 +76,6 @@ def lifting_example():
 
 if __name__ == "__main__":
     # ballistic_example("mercury_parachute")
-    # ballistic_example("mercury")
-    ballistic_example("beta_study", plot_units="metric")
-    # lifting_example()
-
-
-
-   
+    # ballistic_example("mercury", plot_units="metric")
+    # ballistic_example("beta_study", plot_units="metric")
+    lifting_example()
