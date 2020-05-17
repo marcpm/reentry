@@ -74,21 +74,6 @@ def lifting_example():
 
 
 
-def atmos_test():
-    T =  lambda alt: 288.15 - 0.0065*alt
-    p = lambda alt, T: 101325*(T/288.15)**5.256
-
-    T_isa = T(ft2m(250_000))
-    p_isa = p(ft2m(250_000), T_isa)
-
-    rho_isa = p_isa/(287*T_isa)
-    h = 269_000
-    rho_76 = get_rho(ft2m(h))
-    # print(f"@{ft2m(250000)} \nISA: \n   rho: {rho_isa}")
-    print(f"@{h}ft \nUS 1976: \n   rho: {rho_76}")
-
-
-
 if __name__ == "__main__":
     # ballistic_example("mercury_parachute")
     # ballistic_example("mercury")
