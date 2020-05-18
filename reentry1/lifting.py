@@ -74,7 +74,7 @@ def run_lifting_simulation( beta=1291.72457,
  
     time_spans_dense = np.linspace(*time_span, num=200) # sample time for later interpolation of solutions
 
-    fig, axes = plt.subplots(4,3, figsize=(7,8),  ) # create plot figures
+    fig, axes = plt.subplots(4,3, figsize=(17,22),  ) # create plot figures
 
     for gamma in gamma_0s:
         initial_conditions[1] = gamma # set gamma initial for ode
@@ -169,7 +169,9 @@ def run_lifting_simulation( beta=1291.72457,
     fig.delaxes(axes[3,2])
     # plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
     fig.tight_layout()
-    plt.subplots_adjust( wspace=0.95, hspace=0.65, )
+    # plt.subplots_adjust( wspace=0.35, hspace=0.25, )
+    plt.subplots_adjust( wspace= 1.05, hspace=0.55, )
+
 
     plt.show()
 

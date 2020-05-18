@@ -24,7 +24,9 @@ VERSION = '0.1.0'
 REQUIRED = [
     'numpy',
     'scipy',
-    'matplotlib'
+    'matplotlib',
+    "jupyter",
+    "appmode",
 
 ]
 

@@ -18,7 +18,7 @@ import collections
 plt.style.use('classic')
 font = {'family' : 'monospace',
         'weight' : 'regular',
-        'size'   : 7}
+        'size'   : 8}
 
 plt.rc('font', **font) 
 plt.rc('legend',fontsize=7)
@@ -77,7 +77,7 @@ def run_ballistic_simulation( betas=[100,500,1000,5000],spacecraft=None,
     initial_conditions[1] = deg2rad(initial_conditions[1])  # set gamma  deg2rad
     
     altitudes_dense = np.linspace(*altitude_range, num=200) # sample altitude values for plotting
-    fig, axes = plt.subplots(4,3, figsize=(7,8),  ) # create plot figures
+    fig, axes = plt.subplots(4,3, figsize=(17,22),  ) # create plot figures
 
     for beta in betas:
         result = solve_ivp(ballistic_odes, t_span=altitude_range, 
@@ -93,9 +93,10 @@ def run_ballistic_simulation( betas=[100,500,1000,5000],spacecraft=None,
         gamma_sol = sol[1]
         time_sol =  sol[2]
         range_sol = sol[3]
-        print("Touchdown velocity: ", v_sol.min(), "m/s")
-        print("Range: ", range_sol[-1], "m")
-        print("Entry Time: ", time_sol[1], "s")
+        print(f"\nRun for beta: {_beta}")
+        print(f" Touchdown velocity: {v_sol[-1]:.2f} m/s")
+        print(f" Range: {range_sol[-1]:.2f} m")
+        print(f" Entry Time: {time_sol[-1]:.2f} s")
 
         deccel_sol  = np.gradient(v_sol)/ np.gradient(time_sol) / -9.81 # in terms of g
 
@@ -204,12 +205,12 @@ def run_ballistic_simulation( betas=[100,500,1000,5000],spacecraft=None,
 
         
         ax.grid(which="both")
-        ax.legend(bbox_to_anchor=(1.04,0.5), loc="center left", borderaxespad=0)
+        ax.legend(bbox_to_anchor=(1.04,0.5), loc="center left", borderaxespad=0);
         # ax.legend()
 
     fig.delaxes(axes[3,2])
-    # plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
-    fig.tight_layout()
-    plt.subplots_adjust( wspace=0.95, hspace=0.65, )
+
+    # fig.tight_layout()
+    plt.subplots_adjust( wspace= 1.05, hspace=0.55, )
 
     plt.show()
