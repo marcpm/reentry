@@ -2,6 +2,6 @@ channels:
   - conda-forge
 dependencies:
   - appmode
-  -pip
+  - pip
   - pip:
     - -e .
