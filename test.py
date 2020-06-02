@@ -4,6 +4,8 @@ from reentry1.base import  EARTH_R, lbfsqf2Nsqm, Pa2lbfsqf, Spacecraft
 from reentry1.lifting import deg2rad , lbf2N, ft2m, run_lifting_simulation
 from scipy.integrate import solve_ivp
 from math import pi
+# import matplotlib
+# matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from reentry1.coesa import table
 
@@ -69,7 +71,35 @@ def lifting_example():
                      V_0=V_0, gamma_0s=gamma_0s,  
                      altitude=altitude, c_L=Cl, c_D=Cd, time_elapsed=time_lapse,
                      spacecraft=spacecraft,
-                     input_units="imperial", solver="RK45")
+                     input_units="imperial", solver="RK45", marv=False)
+
+
+
+def marv_example():
+    # B61 bomb specs
+
+    W = 700 # lbf
+    A_ref = 1.75 # ft^2 m^2
+    L_ref = 12.5 # ft
+    R_nose = 1.0  # ft
+    Cd = 0.20
+    Cl = 0.40
+    spacecraft = Spacecraft(W, A_ref, R_nose, L_ref, Cd, Cl, 
+                                parachute=False, imperial_units=True, beta_study=False )
+
+    # beta = Pa2lbfsqf(spacecraft.beta)
+    beta = 1000.0 #lbfsqf
+
+    altitude = 250_000
+    V_0= 22_500.0
+    gamma_0s= [12]
+    time_lapse = 400 # 1300 LSODA
+    run_lifting_simulation( beta=beta,
+                     V_0=V_0, gamma_0s=gamma_0s,  
+                     altitude=altitude, c_L=Cl, c_D=Cd, time_elapsed=time_lapse,
+                     spacecraft=spacecraft,
+                     input_units="imperial", solver="RK45", marv=True)
+
 
 
 
@@ -77,5 +107,6 @@ def lifting_example():
 if __name__ == "__main__":
     # ballistic_example("mercury_parachute")
     # ballistic_example("mercury", plot_units="metric")
-    ballistic_example("beta_study", plot_units="metric")
-    # lifting_example()
+    # ballistic_example("beta_study", plot_units="metric")
+    lifting_example()
+    # marv_example()

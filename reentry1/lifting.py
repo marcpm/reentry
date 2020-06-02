@@ -39,6 +39,24 @@ def lifting_odes2(h, x, beta, rho, g, c_L, c_D):
 
     return [dv_dh, dgamma_dh, dt_dh, dr_dh]
 
+def lifting_odes_marv(t, x, beta, rho, g, c_L, c_D):
+    V = x[0]
+    gamma = x[1]
+    h = x[2]
+    r = x[3]
+    q = 0.5 * rho(h) * V**2
+    if h >= ft2m(150_000):
+        c_L = 0.0
+    elif h < ft2m(250_000):
+        c_L = 0.2
+        c_D = 0.4
+    dv_dt = g(h) * (-q/beta  +  sin(gamma))
+    dgamma_dt = ( -q*g(h) / beta * c_L/c_D  + cos(gamma)*(g(h)-V**2/(EARTH_R+h))) / (V)
+    dh_dt = -1* V * sin(gamma)
+    dr_dt = (EARTH_R * V * cos(gamma)) / (EARTH_R+h) 
+
+    return [dv_dt, dgamma_dt, dh_dt, dr_dt]
+
 def lifting_odes(t, x, beta, rho, g, c_L, c_D):
     V = x[0]
     gamma = x[1]
@@ -56,7 +74,7 @@ def lifting_odes(t, x, beta, rho, g, c_L, c_D):
 def run_lifting_simulation( beta=1291.72457,
                      V_0=23_000.0, gamma_0s=[0.1, 1.0, 2.5],  
                      altitude=250_000.0, time_elapsed = 2000.0, c_L=0.84, c_D=0.84,
-                     spacecraft=False, input_units="imperial", plot_units="imperial", solver="RK45"):
+                     spacecraft=False, input_units="imperial", plot_units="imperial", solver="RK45", marv=False):
     
     beta = lbfsqf2Nsqm(beta)
     if not isinstance(gamma_0s, collections.Iterable):
@@ -78,10 +96,14 @@ def run_lifting_simulation( beta=1291.72457,
 
     for gamma in gamma_0s:
         initial_conditions[1] = gamma # set gamma initial for ode
-        result = solve_ivp(lifting_odes, t_span=time_span, 
+        if not marv:
+            result = solve_ivp(lifting_odes, t_span=time_span, 
                             y0=initial_conditions, args=[beta, get_rho, get_g, c_L, c_D], 
                             dense_output=True, method=solver, atol=1e-6, rtol=1e-3)
-
+        else: 
+            result = solve_ivp(lifting_odes_marv, t_span=time_span, 
+                            y0=initial_conditions, args=[beta, get_rho, get_g, c_L, c_D], 
+                            dense_output=True, method=solver, atol=1e-6, rtol=1e-3)
         sol = result.sol(time_spans_dense)
         # dump invalid solutions due unstiff solver sampling , integrating over negative altitudes
         time_spans_dense = time_spans_dense[ np.where(sol[2,:]>0)[0]]
